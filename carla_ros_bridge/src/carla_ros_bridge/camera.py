@@ -16,6 +16,7 @@ import numpy
 
 import rospy
 import tf
+import cv2
 from cv_bridge import CvBridge
 from sensor_msgs.msg import CameraInfo
 
@@ -100,6 +101,7 @@ class Camera(Sensor):
                 "Camera{} received image not matching configuration".format(self.get_prefix()))
         image_data_array, encoding = self.get_carla_image_data_array(
             carla_image=carla_image)
+
         img_msg = Camera.cv_bridge.cv2_to_imgmsg(image_data_array, encoding=encoding)
         # the camera data is in respect to the camera's own frame
         img_msg.header = self.get_msg_header()
@@ -187,6 +189,8 @@ class RgbCamera(Camera):
                                         prefix='camera/rgb/' +
                                         carla_actor.attributes.get('role_name'))
 
+        self.convert_to_bgr8 = rospy.get_param("convert_to_bgr8", False)
+
     def get_carla_image_data_array(self, carla_image):
         """
         Function (override) to convert the carla image to a numpy data array
@@ -204,6 +208,8 @@ class RgbCamera(Camera):
             shape=(carla_image.height, carla_image.width, 4),
             dtype=numpy.uint8, buffer=carla_image.raw_data)
 
+        if self.convert_to_bgr8:
+            return cv2.cvtColor(carla_image_data_array, cv2.COLOR_BGRA2BGR), 'bgr8'
         return carla_image_data_array, 'bgra8'
 
     def get_image_topic_name(self):
