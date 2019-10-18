@@ -495,6 +495,9 @@ def main():
             carla_world = carla_client.load_world(parameters["town"])
             carla_world.tick()
 
+        if "weather" in parameters:
+            exec("carla_world.set_weather(carla.WeatherParameters.%s)" % parameters['weather'])
+
         carla_bridge = CarlaRosBridge(carla_client.get_world(), parameters)
         carla_bridge.run()
     finally:
