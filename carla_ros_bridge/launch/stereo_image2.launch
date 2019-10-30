@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="ISO-8859-15"?>
+<launch>
+<node ns="stereo" name="stereo_image_proc" pkg="stereo_image_proc" type="stereo_image_proc" clear_params="true" output="screen">
+    <remap from="left/image_raw" to="/cam02/image_raw" />
+    <remap from="left/camera_info" to="/cam02/camera_info" />
+    <remap from="right/image_raw" to="/cam03/image_raw" />
+    <remap from="right/camera_info" to="/cam03/camera_info" />
+    <param name="approximate_sync" value="true" />
+  <!--<rosparam file="$(find voxblox_ros)/cfg/stereo/kitti_stereo_jager.yaml"/>-->
+  </node>
+</launch>
