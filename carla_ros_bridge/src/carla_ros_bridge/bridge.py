@@ -496,7 +496,10 @@ def main():
             carla_world.tick()
 
         if "weather" in parameters:
-            carla_world.set_weather(getattr(carla.WeatherParameters, parameters['weather']))
+            try:
+                carla_world.set_weather(getattr(carla.WeatherParameters, parameters['weather']))
+            except AttributeError:
+                rospy.logwarn("Couldn't find weather preset {}.".format(paramters['weather']))
 
         carla_bridge = CarlaRosBridge(carla_client.get_world(), parameters)
         carla_bridge.run()

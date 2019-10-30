@@ -189,7 +189,8 @@ class RgbCamera(Camera):
                                         prefix='camera/rgb/' +
                                         carla_actor.attributes.get('role_name'))
 
-        self.convert_to_bgr8 = rospy.get_param("convert_to_bgr8", False)
+        self.convert_to_bgr8 = rospy.get_param("carla/convert_to_bgr8", False)
+        self.image_topic_name = rospy.get_param("carla/rgb_camera_topic_name", "image_color")
 
     def get_carla_image_data_array(self, carla_image):
         """
@@ -219,7 +220,7 @@ class RgbCamera(Camera):
         :return image topic name
         :rtype string
         """
-        return "image_color"
+        return self.image_topic_name
 
 
 class DepthCamera(Camera):
@@ -275,6 +276,14 @@ class DepthCamera(Camera):
         #    shape=(carla_image.height, carla_image.width, 1),
         #    dtype=numpy.float32, buffer=carla_image.raw_data)
         #
+        # from /home/jonasgerstner/Documents/CARLA/PythonAPI/examples/manual_control.py, line 756
+        #
+        # image.convert(self.sensors[self.index][1])
+        # array = np.frombuffer(image.raw_data, dtype=np.dtype("uint8"))
+        # array = np.reshape(array, (image.height, image.width, 4))
+        # array = array[:, :, :3]
+        # array = array[:, :, ::-1]
+        
         bgra_image = numpy.ndarray(
             shape=(carla_image.height, carla_image.width, 4),
             dtype=numpy.uint8, buffer=carla_image.raw_data)
