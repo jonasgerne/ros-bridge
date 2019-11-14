@@ -6,6 +6,6 @@
     <remap from="right/image_raw" to="/cam03/image_raw" />
     <remap from="right/camera_info" to="/cam03/camera_info" />
     <param name="approximate_sync" value="true" />
-  <!--<rosparam file="$(find voxblox_ros)/cfg/stereo/kitti_stereo_jager.yaml"/>-->
+  <rosparam file="$(find voxblox_ros)/cfg/stereo/kitti_stereo_jager.yaml"/>
   </node>
 </launch>
